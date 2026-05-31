@@ -24,7 +24,7 @@ void inicializar(){
         return;
     }else{
         nil->cor = black;
-        nil->direita = nil->esquerda = nil->parente = nil;
+        nil->direita = nil->esquerda = nil->parente = nil; //no externo
     }
 }
 
@@ -88,7 +88,7 @@ void insertRules(RBnode **root, RBnode *z){
                 z->parente->cor = black;
                 y->cor = black;
                 z->parente->parente->cor = red;
-                z=z->parente->parente; //depois de resolver tudo eu vou passar a apontar o lugar do avo e dai o codigo ainda roda se o bisavo for vermelho ele roda ate arrumar tudo
+                z=z->parente->parente; //depois de resolver tudo eu vou passar a apontar o lugar do avo e dai o codigo ainda roda se o bisavo for vermelho, ele roda ate arrumar tudo
             }else{ //se o tio nao eh vermelho
                 if(z==z->parente->direita){ //se eu for o filho do lado direito
                     z = z->parente;
@@ -144,7 +144,61 @@ void inserirElementos(RBnode **root,int dado){
     insertRules(root,z);
 }
 
-int main(){
+void in_order(RBnode *root){
+    if(root!=nil){
+        in_order(root->esquerda);
+        printf("%d(%s) ",root->dado,root->cor==red ? "red":"black");
+        in_order(root->direita);
+    }
+}
 
+
+void printTree(RBnode *r,int level){
+    if(r==nil){
+        return;
+    }
+    printTree(r->direita,level+1);
+    for(int i=0;i<level;i++){
+        printf("\t");
+    }
+    printf("%d(%s)\n",r->dado,r->cor==red ? "red":"black");
+    printTree(r->esquerda,level+1);
+}
+
+
+
+
+int menu(){
+    inicializar();
+    RBnode *root = nil;
+    int op,dado;
+    do{
+        printf("0-SAIR || 1-INSERIR || 2-PERCURSO_IN_ORDER || 3-IMPRIMIR\n");
+        scanf("%d",&op);
+        switch(op){
+            case 0:
+                printf("adeus...");
+                break;
+            case 1:
+                printf("digite um numero para adicionar:\n");
+                scanf("%d",&dado);
+                inserirElementos(&root,dado);
+                break;
+            case 2:
+                in_order(root);
+                break;
+            case 3:
+                printTree(root,0);
+                break;
+            default:
+                printf("digite algo certo");
+                break;
+        }
+    }while(op!=0);
+    return 0;
+}
+
+int main(){
+    menu();
 }
 
